@@ -1,0 +1,57 @@
+
+def tT(hour=0, minute=0, second=0):
+    minutes = hour * 60 + minute
+    seconds = minutes * 60 + second
+    return seconds
+
+def intToTime(seconds):
+    minutes, second = divmod(seconds, 60)
+    hour, minute = divmod(minutes, 60)
+    return hour, minute, second
+
+
+capSub = (
+            #sun
+            ('rahu', range(972000, 976400)),
+            ('jup', range(976400, 987200)),
+            ('sat', range(987200, 1005600)),
+            ('merc', range(1005600, 1030800)),
+            ('ketu', range(1030800, 1058800)),
+            ('ven', range(1058800, 1094800)),
+            #mon
+            ('mon', range(1094800, 1134800)),
+            ('mars', range(1134800, 1177600)),
+            ('rahu', range(1177600, 1227600)),
+            ('jup', range(1227600, 1284000)),
+            ('sat', range(1284000, 1348000)),
+            ('merc', range(1348000, 1418800)),
+            ('ketu', range(1418800, 1492400)),
+            ('ven', range(1492400, 1574000)),
+            ('sun', range(1574000, 1658000)),
+            #mars
+            ('mars', range(1658000, 1744800)),
+            ('rahu', range(1744800, 1744800)),
+            ('jup', range(1744800, 1845200)),
+            ('sat', range(1845200, 1953200)),
+            
+          )
+aquaSub = (
+            #mars
+            ('merc', range(1953200, 1960000)),
+            ('ketu', range(1960000, 1969600)),
+            ('ven', range(1969600, 1987200)),
+            ('sun', range(1987200, 2007200)),
+            ('mon', range(2007200, 2031200)), #pg 119 = 212. Saturn, Mars, Moon: (5-33-20)-(6-40-00).
+        )
+
+nexxt = ((2007200 + tT(6,40,0)))
+print(nexxt)
+
+
+'''
+mon = tT(272,41,0)
+
+for sub, range_ in capSub:
+    if mon in range_:
+        print(sub)
+'''
