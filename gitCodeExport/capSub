@@ -1,5 +1,4 @@
-
-def tT(hour=0, minute=0, second=0):
+def timeToInt(hour=0, minute=0, second=0):
     minutes = hour * 60 + minute
     seconds = minutes * 60 + second
     return seconds
@@ -10,48 +9,85 @@ def intToTime(seconds):
     return hour, minute, second
 
 
+
 capSub = (
+            
             #sun
-            ('rahu', range(972000, 976400)),
-            ('jup', range(976400, 987200)),
-            ('sat', range(987200, 1005600)),
-            ('merc', range(1005600, 1030800)),
-            ('ketu', range(1030800, 1058800)),
-            ('ven', range(1058800, 1094800)),
+            ('rahu', range(timeToInt(270, 0, 0), timeToInt(271, 13, 20))),
+            ('jup', range(timeToInt(271, 13, 20), timeToInt(273, 0, 0))),
+            ('sat', range(timeToInt(273, 0, 0), timeToInt(275, 6, 40))),
+            ('merc', range(timeToInt(275, 6, 40), timeToInt(277, 0, 0))),
+            ('ketu', range(timeToInt(277, 0, 0), timeToInt(277, 46, 40))),
+            ('ven', range(timeToInt(277, 46, 40), timeToInt(280, 0, 0))),
             #mon
-            ('mon', range(1094800, 1134800)),
-            ('mars', range(1134800, 1177600)),
-            ('rahu', range(1177600, 1227600)),
-            ('jup', range(1227600, 1284000)),
-            ('sat', range(1284000, 1348000)),
-            ('merc', range(1348000, 1418800)),
-            ('ketu', range(1418800, 1492400)),
-            ('ven', range(1492400, 1574000)),
-            ('sun', range(1574000, 1658000)),
+            ('mon', range(timeToInt(280, 0, 0), timeToInt(281, 6, 40))),
+            ('mars', range(timeToInt(281, 6, 40), timeToInt(281, 53, 20))),
+            ('rahu', range(timeToInt(281, 53, 20), timeToInt(283, 53, 20))),
+            ('jup', range(timeToInt(283, 53, 20), timeToInt(285, 40, 0))),
+            ('sat', range(timeToInt(285, 40, 0), timeToInt(287, 46, 40))),
+            ('merc', range(timeToInt(287, 46, 40), timeToInt(288, 40, 0))),
+            ('ketu', range(timeToInt(288, 40, 0), timeToInt(289, 26, 40))),
+            ('ven', range(timeToInt(289, 26, 40), timeToInt(291, 40, 0))),
+            ('sun', range(timeToInt(291, 40, 0), timeToInt(292, 20, 0))),
             #mars
-            ('mars', range(1658000, 1744800)),
-            ('rahu', range(1744800, 1744800)),
-            ('jup', range(1744800, 1845200)),
-            ('sat', range(1845200, 1953200)),
+            ('mars', range(timeToInt(292, 20, 0), timeToInt(293, 6, 40))),
+            ('rahu', range(timeToInt(293, 6, 40), timeToInt(295, 6, 40))),
+            ('jup', range(timeToInt(295, 6, 40), timeToInt(296, 53, 20))),
+            ('sat', range(timeToInt(296, 53, 20), timeToInt(300, 0, 0))),
+            
+            #mars pg 119 AQU
+            ('merc', range(timeToInt(300, 0, 0), timeToInt(301, 53, 20))),
+            ('ketu', range(timeToInt(301, 53, 20), timeToInt(302, 40, 0))),
+            ('ven', range(timeToInt(302, 40, 0), timeToInt(304, 53, 20))),
+            ('sun', range(timeToInt(304, 53, 20), timeToInt(305, 33, 20))),
+            ('mon', range(timeToInt(305, 33, 20), timeToInt(306, 40, 0))),
+            ('rahu', range(timeToInt(306, 40, 0), timeToInt(308, 40, 0))),
+            ('jup', range(timeToInt(308, 40, 0), timeToInt(310, 28, 40))),
+            ('sat', range(timeToInt(310, 28, 40), timeToInt(312, 33, 20))),
+            
+            #GEM
+            ('jup', range(timeToInt(80,0,0), timeToInt(81,46,40))),
+            ('sat', range(timeToInt(81,46,40), timeToInt(83,53,20))),
+            ('merc', range(timeToInt(83,53,20), timeToInt(85,46,40))), 
+            ('ketu', range(timeToInt(85,46,40), timeToInt(86,33,20))),
+            ('ven', range(timeToInt(86,33,20), timeToInt(86,46,40))),
+            ('sun', range(timeToInt(88,46,40), timeToInt(89,26,40))),
+            ('mon', range(timeToInt(89,26,40), timeToInt(90,0,0))),
             
           )
 aquaSub = (
-            #mars
-            ('merc', range(1953200, 1960000)),
-            ('ketu', range(1960000, 1969600)),
-            ('ven', range(1969600, 1987200)),
-            ('sun', range(1987200, 2007200)),
-            ('mon', range(2007200, 2031200)), #pg 119 = 212. Saturn, Mars, Moon: (5-33-20)-(6-40-00).
+            #mars pg 119
+            ('merc', range(timeToInt(300, 0, 0), timeToInt(301, 53, 20))),
+            ('ketu', range(timeToInt(301, 53, 20), timeToInt(302, 40, 0))),
+            ('ven', range(timeToInt(302, 40, 0), timeToInt(304, 53, 20))),
+            ('sun', range(timeToInt(304, 53, 20), timeToInt(305, 33, 20))),
+            ('mon', range(timeToInt(305, 33, 20), timeToInt(306, 40, 0))),
+            ('rahu', range(timeToInt(306, 40, 0), timeToInt(308, 40, 0))),
+            ('jup', range(timeToInt(308, 40, 0), timeToInt(310, 28, 40))),
+            ('sat', range(timeToInt(310, 28, 40), timeToInt(312, 33, 20))),
         )
 
-nexxt = ((2007200 + tT(6,40,0)))
-print(nexxt)
+'''
+#Saturn, Sun, Jupiter: (1-13-20)-(3-00-00)
+#we are looking for (3-00-00) - (1-13-20) add it to next
+diff = intToTime(timeToInt(2,40) - timeToInt(1,53,20))
+print(f'deff = {diff}') #deff = (1, 46, 40)
+#then
+neexxtt = intToTime(timeToInt(24,6,40) + timeToInt(diff[0], diff[1], diff[2]))
+print(f'neexxtt = {neexxtt}')
+'''
 
+''' TESTING  ('mon', range(1094800, 976400)),'''
 
 '''
-mon = tT(272,41,0)
+mon = timeToInt(310,3,0)
 
 for sub, range_ in capSub:
     if mon in range_:
         print(sub)
+        print()
+'''
+'''
+pg 113
+
 '''
