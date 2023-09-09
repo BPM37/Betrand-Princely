@@ -1,5 +1,6 @@
 
 from __future__ import print_function, division
+from capSubs import capSub
 
 nat = { 'asc':{'deg':16,'sign':9,'min':15,'syb':"A"},
         'sun':{'deg':3,'sign':12,'min':3,'syb':"sun"},
@@ -130,16 +131,16 @@ class VediChart:
         #find it in house tuple
         for const, name in constellation:
             if vpt_deg_ in const:
-                result_ = name, const #jup
+                result_ = name #jup
                 break 
         
         #which house ruled
         houseRulers = {'sun':5, 'mon':4, 'merc':[3, 6], 'ven':[2, 7], 'mars':[1, 8], 'jup':[9, 12], 'sat':[10, 11]}
         
         #if mon in 
-        if result_[0] in ['sun', 'mon']:
+        if result_ in ['sun', 'mon']:
             #convert num to sign name
-            houseR = convert[houseRulers[result_[0]]] #can
+            houseR = convert[houseRulers[result_]] #can
             
             #create mon chart
             inMonChart = convert[self._vedicpt(asc)[1]] #cap - so the chart begins from cap moon sign
@@ -153,10 +154,10 @@ class VediChart:
                 if planetH in h_tup:
                     houseName = name
                     break 
-            return result_[0], houseName, result_[1] #moon, rule house but in
+            return result_, houseName #moon, rule house but in
         
-        elif result_[0] in ['merc', 'ven', 'mars', 'jup', 'sat']:
-            houseR = convert[houseRulers[result_[0]][0]],convert[houseRulers[result_][1]]
+        elif result_ in ['merc', 'ven', 'mars', 'jup', 'sat']:
+            houseR = convert[houseRulers[result_][0]],convert[houseRulers[result_][1]]
             
             #create mon chart
             inMonChart = convert[self._vedicpt(asc)[1]] #cap - so the moon begins from cap
@@ -175,89 +176,36 @@ class VediChart:
                         houseNames.append(name)
                         break
               
-            return result_[0], houseName, result_[1] #moon, rule house but in
+            return result_, houseName #moon, rule house but in
         else:
             return f'{result_} does not have house yet'
         
     def subOf(self, _natPlanet, _name):
         
-        
-        
-        def tI(hour=0, minute=0, second=0):
+        def tT(hour=0, minute=0, second=0):
             minutes = hour * 60 + minute
             seconds = minutes * 60 + second
             return seconds
-
-        def iT(seconds):
-            minutes, second = divmod(seconds, 60)
-            hour, minute = divmod(minutes, 60)
-            return hour, minute
         
         #what is degre of planet in 360 then convert to vedic
         vedicPlanetDeg = (zodiac[_natPlanet[_name]['sign']] + _natPlanet[_name]['deg']) - 23 #returns 283
-        print(f'vedicPlanetDeg = {vedicPlanetDeg}')
+        #print(f'vedicPlanetDeg = {vedicPlanetDeg}')
         
         #what is the constellationOf planet
-        planetConstellation = self.constellationOf(_natPlanet, _name, asc='asc') #returns ('mon', 'h9', range(281, 294))
+        planetConst = self.constellationOf(_natPlanet, _name, asc='asc') #returns ('mon', 'h9', range(281, 294))
+        #print(f'planetConstellation = {planetConstellation}')
         
-        #we want the call to planetConstellation to return ('mon', 'h9', 281)= const, houseruled,and where it starts
-        rtd = ('mon', 'h9', 281)
-        #we start const at - 1
-        cst = rtd[2] - 1
-        #this is how const is divided
-        sCt = ['ketu', 'ven', 'sun', 'mon', 'mars', 'rahu', 'jup', 'sat', 'merc', 'ketu', 'ven', 'sun', 'mon', 'mars', 'rahu', 'jup', 'sat', 'merc']
-        #stating from startConst we want to find the index of mon or other planet in the how const is divided
-        #example is moon
-        #rtd[0] #mon
-        #next will be mars
-        #sCt.index(rtd[0]) + 1
-        #find its name sCt[sCt.index(rtd[0]) + 1] = 'mars'
-        #we have to check if it is at the last of the list
-        #len(sCt) #9
-        def nextSub():
-            pass
-            #create a list of the subs in the const we are working ON
-        cConst = [] #['mon', 'mars', 'rahu', 'jup', 'sat', 'merc', 'ketu', 'ven', 'sun']
-        """   
-        count = 0
-        while (count <= 8):
-            
-            subb = sCt[sCt.index(rtd[0]) + count]
-            statRang = cst
-            endRang = (intToTime(timeToInt(cst) + timeToInt(1,40))[0])
-            
-            [subb, range(statRang, endRang)]
-            
-            cConst.append(sCt[sCt.index(rtd[0]) + count])
-            
-            count += 1
         
-        statt = intToTime(timeToInt(cst) + timeToInt(1,40))[0]
-        """
-        a = [[rtd[0], range(cst, (iT(tI(cst) + tI(1,40))[0]) + 1)],
-             ['mars', range((iT(tI(cst) + tI(1,40))[0]) + 1, (iT(tI(cst) + tI(3, 20))[0]) + 1)],
-             ['rahu', range((iT(tI(cst) + tI(3, 20))[0]) + 1, (iT(tI(cst) + tI(5, 0))[0]) + 1)],
-             ['jup', range((iT(tI(cst) + tI(5, 0))[0]) + 1, (iT(tI(cst) + tI(6, 40))[0]) + 1)],
-             ['sat', range((iT(tI(cst) + tI(6, 40))[0]) + 1, (iT(tI(cst) + tI(8, 20))[0]) + 1)],
-             ['merc', range((iT(tI(cst) + tI(8, 20))[0]) + 1, (iT(tI(cst) + tI(10, 20))[0]) + 1)],
-             ['ketu', range((iT(tI(cst) + tI(10, 20))[0]) + 1, (iT(tI(cst) + tI(12, 0))[0]) + 1)],
-             ['ven', range((iT(tI(cst) + tI(12, 0))[0]) + 1, (iT(tI(cst) + tI(13, 40))[0]) + 1)],
-             ['sun', range((iT(tI(cst) + tI(13, 40))[0]) + 1, (iT(tI(cst) + tI(15, 20))[0]) + 1)],
-             ]
-        
-        """
-        [['mon', range(280, 282)], ['mars', range(282, 284)],['rahu', range(284, 286)], ['jup', range(286, 287)],
-        ['sat', range(287, 289)], ['merc', range(289, 291)], ['ketu', range(291, 293)], ['ven', range(293, 294)],
-        ['sun', range(294, 296)]]
-        """
-        
-        print(a)
-        print()
-        for subbb, ranggg in a:
-            if vedicPlanetDeg in ranggg:
-                print(subbb)
+        for sub, range_ in capSub:
+            if tT(vedicPlanetDeg) in range_:
+                resulttt = sub
                 break
-            
+             
+        oracle_1 = f"{_name} is in {planetConst[0]} const, {planetConst[0]} rules {planetConst[1]},"
+        oracle_2 = f"so {_name} will give the result of {planetConst[1]}."
+        oracle_3 = f"But will the {planetConst[1]} be good or bad? My answer: the {planetConst[1]} will be challenging b/c {_name} sub {sub} is in 12H"
+                
+        return {'oracle_1':oracle_1, 'oracle_2':oracle_2, 'oracle_3':oracle_3}  
     
     def __str__(self):
         return f'self.nat is {self.transit}'
@@ -266,4 +214,4 @@ inMoonChart = VediChart(nat, prog)
 #print(inMoonChart._vedicpt('mon'))
 #print(inMoonChart.houseOf(nat, 'jup'))
 #print(inMoonChart.constellationOf(nat, 'mars'))
-inMoonChart.subOf(nat, 'ven')
+print(inMoonChart.subOf(nat, 'mon'))
