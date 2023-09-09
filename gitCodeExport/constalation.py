@@ -4,14 +4,16 @@ from __future__ import print_function, division
 nat = { 'asc':{'deg':16,'sign':9,'min':15,'syb':"A"},
         'sun':{'deg':3,'sign':12,'min':3,'syb':"sun"},
         'mon':{'deg':11,'sign':11,'min':3,'syb':"mon"},
-        'mec':{'deg':6,'sign':11,'min':40,'syb':"mec"},
+        'merc':{'deg':6,'sign':11,'min':40,'syb':"merc"},
         'ven':{'deg':25,'sign':10,'min':41,'syb':"ven"},
         'mars':{'deg':19,'sign':7,'min':10,'syb':"mars"},
         'jup':{'deg':10,'sign':8,'min':19,'syb':"jup"},
         'sat':{'deg':21,'sign':7,'min':50,'syb':"sat"},
-        'ura':{'deg':4,'sign':9,'min':30,'syb':"ura"},
+        'rahu':{'deg':21,'sign':4,'min':56,'syb':"rahu"},
+        'ketu':{'deg':21,'sign':10,'min':56,'syb':"ketu"},
+        #'ura':{'deg':4,'sign':9,'min':30,'syb':"ura"},
         
-        'test':{'deg':4,'sign':1,'min':30,'syb':"test"},
+        #'test':{'deg':4,'sign':1,'min':30,'syb':"test"},
         #nep:{deg:26,sign:9,min:41,syb:"nep"},
         #plu:{deg:26,sign:7,min:46,syb:"plu"},
         #nod:{deg:21,sign:4,min:56,syb:"nod"},
@@ -48,121 +50,116 @@ sag = {'sag':360,'cap':30,'aqu':60,'pis':90,'ari':120,'tua':150,'gem':180,'can':
 cap = {'cap':360,'aqu':30,'pis':60,'ari':90,'tua':120,'gem':150,'can':180,'leo':210,'vir':240,'lib':270,'sco':300,'sag':330}
 aqu = {'aqu':360,'pis':30,'ari':60,'tua':90,'gem':120,'can':150,'leo':180,'vir':210,'lib':240,'sco':270,'sag':300,'cap':330}
 
-house_tuple = ((range(0, 29),'h1'),(range(30, 30 + 29), 'h2'),(range(60, 60 + 29), 'h3'),
-            (range(90, 90 + 29), 'h4'), (range(120, 120 + 29), 'h5'), (range(150, 150 + 29), 'h6'),
-            (range(180, 180 + 29), 'h7'),(range(210, 210 + 29), 'h8'), (range(240, 240 + 29), 'h9'),
-            (range(270, 270 + 29), 'h10'), (range(300, 300 + 29), 'h11'),(range(330, 330 + 29), 'h12')
+zodiac = {1:360, 2:30, 3:60, 4:90, 5:120, 6:150, 7:180, 8:210, 9:240, 10:270, 11:300, 12:330}
+
+house_tuple = ((range(0, 30),'h1'),(range(30, 60), 'h2'),(range(60, 90), 'h3'),
+            (range(90, 120), 'h4'), (range(120, 150), 'h5'), (range(150, 180), 'h6'),
+            (range(180, 210), 'h7'),(range(210, 240), 'h8'), (range(240, 270), 'h9'),
+            (range(270, 300), 'h10'), (range(300, 330), 'h11'),(range(330, 360), 'h12')
             )
 
-class Vedic:
+class VediChart:
     '''vars'''
-    def __init__(self, natal, transit):
+    def __init__(self, natal, transit_):
         self.nat = natal
-        self.transit = transit
+        self.transit = transit_
         
     def _vedicpt(self, planet):
         #get the west deg
-        w_deg = self.nat[planet]['deg'] #ven = 25
+        w_deg = self.nat[planet]['deg'] #mon = 11
         #convert to vedic
         w2v = west_to_vedic[w_deg] # [2, -1]
         
         #since it is in another sign so (sign - 1)
         
-        return (w2v[0], self.nat[planet]['sign'] + w2v[1])
+        return (w2v[0], self.nat[planet]['sign'] + w2v[1]) #returns(18, 10)
     
     def _vedicPointDeg(self, natPlanet_, name_):
         #get the sign num of planet and convert num to str
         a_planet_pt = convert[natPlanet_[name_]['sign']] #cap
         
-        #call it in the moons house
-        mon_asc = convert[self._vedicpt('mon')[1]] #cap - so the moon begins from cap
+        #creat the moon chart from CAP
+        monChart = convert[self._vedicpt('mon')[1]] #returns (18, 10) - cap - so the chart begins from cap
         
         #then call cap(planet pt) from cap(mon asc)
-        w_planet_deg = eval(mon_asc)[a_planet_pt] #60 = pis western, so we need to - 23
+        w_planet_deg = eval(monChart)[a_planet_pt] #60
         
-        #planet_deg = abs(w_planet_deg - 23)
-        planet_deg = w_planet_deg + natPlanet_[name_]['deg']
+        #add deg
+        planet_deg = w_planet_deg + natPlanet_[name_]['deg'] #23
         
-        #add to planet deg
-        return planet_deg - 23 #w2v_deg[0] #60 + 2
+        #make it vedic
+        return planet_deg - 23
     
     
     def houseOf(self, natPlanet, name):
         
-        vpt_deg = self._vedicPointDeg(natPlanet, name)
+        vpt_deg = self._vedicPointDeg(natPlanet, name) #returns 287
     
         #find it in house tuple
-        for h_tup, name in house_tuple:
+        for h_tup, name_ in house_tuple:
             if vpt_deg in h_tup:
-                result = name
+                result = name_
                 break 
         
         return result
     
     def house(self):
-        print(convert[self.vedicpt('mon')[1]])
+        #print(convert[self.vedicpt('mon')[1]])
         #self.house_dict = ((range(vedicpt('mon')-1, vedicpt('mon')),1), (), (), (), (), (), ())
-        
-    """To ascertain, first of all, one is to take
-
-    each planet and consider in which constellation it is,
-    the lord of the constellation and
-    note in which houses the lord of the constellation is, 
-    ownership and
-    find out the matters signified by the lord of the 
-    constellation according to its ownership of the Bhava
-    """
+        pass
     
-    def constellationOf(self, _natPlanet, _name):
-        constellation = ((range(0, 14),'ketu'),(range(14, 27), 'ven'),(range(26, 40), 'sun'),
-                         (range(38, 53), 'moon'),(range(52, 66), 'mars'),(range(65, 79), 'rahu'),
-                         (range(78, 91), 'jup'),(range(90, 104), 'sat'),(range(103, 117), 'merc'),
+        
+    def constellationOf(self, _natPlanet, _name, asc='mon'):
+        constellation = ((range(0, 14),'ketu'),(range(15, 27), 'ven'),(range(27, 41), 'sun'),
+                         (range(41, 59), 'mon'),(range(59, 67), 'mars'),(range(67, 81), 'rahu'),
+                         (range(81, 94), 'jup'),(range(94, 107), 'sat'),(range(107, 121), 'merc'),
                          
-                         (range(116, 130),'ketu'),(range(129, 143), 'ven'),(range(142, 156), 'sun'),
-                         (range(155, 169), 'moon'),(range(168, 181), 'mars'),(range(180, 194), 'rahu'),
-                         (range(193, 207), 'jup'),(range(206, 220), 'sat'),(range(219, 233), 'merc'),
+                         (range(121, 134),'ketu'),(range(134, 147), 'ven'),(range(147, 161), 'sun'),
+                         (range(161, 174), 'mon'),(range(174, 187), 'mars'),(range(187, 201), 'rahu'),
+                         (range(201, 214), 'jup'),(range(214, 227), 'sat'),(range(227, 241), 'merc'),
                          
-                         (range(232, 246),'ketu'),(range(245, 259), 'ven'),(range(258, 271), 'sun'),
-                         (range(270, 284), 'moon'),(range(283, 297), 'mars'),(range(296, 310), 'rahu'),
-                         (range(309, 323), 'jup'),(range(322, 335), 'sat'),(range(334, 348), 'merc')
+                         (range(241, 254),'ketu'),(range(254, 267), 'ven'),(range(267, 281), 'sun'),
+                         (range(281, 294), 'mon'),(range(294, 307), 'mars'),(range(307, 321), 'rahu'),
+                         (range(321, 334), 'jup'),(range(334, 347), 'sat'),(range(347, 360), 'merc')
                          )
         
         #b = ari['ari']
-        vpt_deg_ = (ari[convert[_natPlanet[_name]['sign']]] + _natPlanet[_name]['deg']) - 23   #self._vedicpt(_name)
+        vpt_deg_ = (ari[convert[_natPlanet[_name]['sign']]] + _natPlanet[_name]['deg']) - 23
         #print(f'vpt_deg_ = {vpt_deg_}')
         
         #find it in house tuple
         for const, name in constellation:
             if vpt_deg_ in const:
-                result_ = name
+                result_ = name, const #jup
                 break 
         
         #which house ruled
         houseRulers = {'sun':5, 'mon':4, 'merc':[3, 6], 'ven':[2, 7], 'mars':[1, 8], 'jup':[9, 12], 'sat':[10, 11]}
         
-        #convert num to sign name
-        if result_ in ['sun', 'mon']:
-            houseR = convert[houseRulers[result_]] #cap
+        #if mon in 
+        if result_[0] in ['sun', 'mon']:
+            #convert num to sign name
+            houseR = convert[houseRulers[result_[0]]] #can
             
             #create mon chart
-            inMonChart = convert[self._vedicpt('mon')[1]] #cap - so the moon begins from cap
+            inMonChart = convert[self._vedicpt(asc)[1]] #cap - so the chart begins from cap moon sign
             
-            #degree in the moons chart
-            planetH = eval(inMonChart)[houseR] #60
-            print(f'planetH = {planetH}')
+            #planet degree in the moons chart
+            '''            cap[can]'''
+            planetH = eval(inMonChart)[houseR] #180
             
             #search in house tuple for name
             for h_tup, name in house_tuple:
                 if planetH in h_tup:
                     houseName = name
                     break 
-            #print(f'houseName = {houseName}')
-            return result_, houseName
-        else:
-            houseR = convert[houseRulers[result_][0]],convert[houseRulers[result_][1]]
+            return result_[0], houseName, result_[1] #moon, rule house but in
+        
+        elif result_[0] in ['merc', 'ven', 'mars', 'jup', 'sat']:
+            houseR = convert[houseRulers[result_[0]][0]],convert[houseRulers[result_][1]]
             
             #create mon chart
-            inMonChart = convert[self._vedicpt('mon')[1]] #cap - so the moon begins from cap
+            inMonChart = convert[self._vedicpt(asc)[1]] #cap - so the moon begins from cap
             
             housesInChart = []
             houseNames = []
@@ -178,13 +175,95 @@ class Vedic:
                         houseNames.append(name)
                         break
               
-            return result_, houseNames
+            return result_[0], houseName, result_[1] #moon, rule house but in
+        else:
+            return f'{result_} does not have house yet'
         
+    def subOf(self, _natPlanet, _name):
+        
+        
+        
+        def tI(hour=0, minute=0, second=0):
+            minutes = hour * 60 + minute
+            seconds = minutes * 60 + second
+            return seconds
+
+        def iT(seconds):
+            minutes, second = divmod(seconds, 60)
+            hour, minute = divmod(minutes, 60)
+            return hour, minute
+        
+        #what is degre of planet in 360 then convert to vedic
+        vedicPlanetDeg = (zodiac[_natPlanet[_name]['sign']] + _natPlanet[_name]['deg']) - 23 #returns 283
+        print(f'vedicPlanetDeg = {vedicPlanetDeg}')
+        
+        #what is the constellationOf planet
+        planetConstellation = self.constellationOf(_natPlanet, _name, asc='asc') #returns ('mon', 'h9', range(281, 294))
+        
+        #we want the call to planetConstellation to return ('mon', 'h9', 281)= const, houseruled,and where it starts
+        rtd = ('mon', 'h9', 281)
+        #we start const at - 1
+        cst = rtd[2] - 1
+        #this is how const is divided
+        sCt = ['ketu', 'ven', 'sun', 'mon', 'mars', 'rahu', 'jup', 'sat', 'merc', 'ketu', 'ven', 'sun', 'mon', 'mars', 'rahu', 'jup', 'sat', 'merc']
+        #stating from startConst we want to find the index of mon or other planet in the how const is divided
+        #example is moon
+        #rtd[0] #mon
+        #next will be mars
+        #sCt.index(rtd[0]) + 1
+        #find its name sCt[sCt.index(rtd[0]) + 1] = 'mars'
+        #we have to check if it is at the last of the list
+        #len(sCt) #9
+        def nextSub():
+            pass
+            #create a list of the subs in the const we are working ON
+        cConst = [] #['mon', 'mars', 'rahu', 'jup', 'sat', 'merc', 'ketu', 'ven', 'sun']
+        """   
+        count = 0
+        while (count <= 8):
+            
+            subb = sCt[sCt.index(rtd[0]) + count]
+            statRang = cst
+            endRang = (intToTime(timeToInt(cst) + timeToInt(1,40))[0])
+            
+            [subb, range(statRang, endRang)]
+            
+            cConst.append(sCt[sCt.index(rtd[0]) + count])
+            
+            count += 1
+        
+        statt = intToTime(timeToInt(cst) + timeToInt(1,40))[0]
+        """
+        a = [[rtd[0], range(cst, (iT(tI(cst) + tI(1,40))[0]) + 1)],
+             ['mars', range((iT(tI(cst) + tI(1,40))[0]) + 1, (iT(tI(cst) + tI(3, 20))[0]) + 1)],
+             ['rahu', range((iT(tI(cst) + tI(3, 20))[0]) + 1, (iT(tI(cst) + tI(5, 0))[0]) + 1)],
+             ['jup', range((iT(tI(cst) + tI(5, 0))[0]) + 1, (iT(tI(cst) + tI(6, 40))[0]) + 1)],
+             ['sat', range((iT(tI(cst) + tI(6, 40))[0]) + 1, (iT(tI(cst) + tI(8, 20))[0]) + 1)],
+             ['merc', range((iT(tI(cst) + tI(8, 20))[0]) + 1, (iT(tI(cst) + tI(10, 20))[0]) + 1)],
+             ['ketu', range((iT(tI(cst) + tI(10, 20))[0]) + 1, (iT(tI(cst) + tI(12, 0))[0]) + 1)],
+             ['ven', range((iT(tI(cst) + tI(12, 0))[0]) + 1, (iT(tI(cst) + tI(13, 40))[0]) + 1)],
+             ['sun', range((iT(tI(cst) + tI(13, 40))[0]) + 1, (iT(tI(cst) + tI(15, 20))[0]) + 1)],
+             ]
+        
+        """
+        [['mon', range(280, 282)], ['mars', range(282, 284)],['rahu', range(284, 286)], ['jup', range(286, 287)],
+        ['sat', range(287, 289)], ['merc', range(289, 291)], ['ketu', range(291, 293)], ['ven', range(293, 294)],
+        ['sun', range(294, 296)]]
+        """
+        
+        print(a)
+        print()
+        for subbb, ranggg in a:
+            if vedicPlanetDeg in ranggg:
+                print(subbb)
+                break
+            
     
     def __str__(self):
         return f'self.nat is {self.transit}'
 
-moon = Vedic(nat, prog)
-#print(moon.vedicpt('mon'))
-print(moon.houseOf(nat,'mon'))
-print(moon.constellationOf(nat,'mon'))
+inMoonChart = VediChart(nat, prog)
+#print(inMoonChart._vedicpt('mon'))
+#print(inMoonChart.houseOf(nat, 'jup'))
+#print(inMoonChart.constellationOf(nat, 'mars'))
+inMoonChart.subOf(nat, 'ven')
