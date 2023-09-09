@@ -1,6 +1,6 @@
 
 from __future__ import print_function, division
-from capSubs import capSub
+from capSubs import capSub, aquaSub
 
 nat = { 'asc':{'deg':16,'sign':9,'min':15,'syb':"A"},
         'sun':{'deg':3,'sign':12,'min':3,'syb':"sun"},
@@ -178,11 +178,11 @@ class VediChart:
               
             return result_, houseName #moon, rule house but in
         else:
-            return f'{result_} does not have house yet'
+            return ('jup', 'h9', range(281, 294))
         
     def subOf(self, _natPlanet, _name):
         
-        def tT(hour=0, minute=0, second=0):
+        def tI(hour=0, minute=0, second=0):
             minutes = hour * 60 + minute
             seconds = minutes * 60 + second
             return seconds
@@ -193,14 +193,16 @@ class VediChart:
         
         #what is the constellationOf planet
         planetConst = self.constellationOf(_natPlanet, _name, asc='asc') #returns ('mon', 'h9', range(281, 294))
-        #print(f'planetConstellation = {planetConstellation}')
+        print(f'planetConst = {planetConst}')
         
         
         for sub, range_ in capSub:
-            if tT(vedicPlanetDeg) in range_:
+            #if tI(283, 11)
+            if tI(vedicPlanetDeg, _natPlanet[_name]['min']) in range_:
                 resulttt = sub
                 break
-             
+        
+        
         oracle_1 = f"{_name} is in {planetConst[0]} const, {planetConst[0]} rules {planetConst[1]},"
         oracle_2 = f"so {_name} will give the result of {planetConst[1]}."
         oracle_3 = f"But will the {planetConst[1]} be good or bad? My answer: the {planetConst[1]} will be challenging b/c {_name} sub {sub} is in 12H"
@@ -214,4 +216,4 @@ inMoonChart = VediChart(nat, prog)
 #print(inMoonChart._vedicpt('mon'))
 #print(inMoonChart.houseOf(nat, 'jup'))
 #print(inMoonChart.constellationOf(nat, 'mars'))
-print(inMoonChart.subOf(nat, 'mon'))
+print(inMoonChart.subOf(nat, 'rahu'))
