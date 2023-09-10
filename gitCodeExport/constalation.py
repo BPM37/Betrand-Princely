@@ -1,6 +1,6 @@
 
 from __future__ import print_function, division
-from capSubs import capSub, aquaSub
+from capSubs import capSub
 
 nat = { 'asc':{'deg':16,'sign':9,'min':15,'syb':"A"},
         'sun':{'deg':3,'sign':12,'min':3,'syb':"sun"},
@@ -94,20 +94,59 @@ class VediChart:
     
     def houseOf(self, natPlanet, name):
         
-        vpt_deg = self._vedicPointDeg(natPlanet, name) #returns 287
+        planetDeg = self._vedicPointDeg(natPlanet, name) #returns 287
     
         #find it in house tuple
-        for h_tup, name_ in house_tuple:
-            if vpt_deg in h_tup:
-                result = name_
+        for h_tup, housee in house_tuple:
+            if planetDeg in h_tup:
+                houseOfPlanet = housee
                 break 
         
-        return result
+        return houseOfPlanet    
     
-    def house(self):
-        #print(convert[self.vedicpt('mon')[1]])
-        #self.house_dict = ((range(vedicpt('mon')-1, vedicpt('mon')),1), (), (), (), (), (), ())
-        pass
+    def _depositionHouse(self, planet_name, asc='mon'):
+        
+        monAscSign = self.nat[asc]['sign'] #11
+        
+        #for vedic
+        #get the mon deg
+        monAscDeg = self.nat[asc]['deg'] #mon = 11
+        
+        #convert to vedic
+        vedicPosition = west_to_vedic[monAscDeg] # [18, -1] = 18 deg in same sign
+        
+        #since it is in another sign so (sign - 1)
+        vedicDegAndSign = vedicPosition[0], (monAscSign + vedicPosition[1]) #returns(18, 10)
+        
+        #vedic sign
+        #vedicSign = vedicDegAndSign[1] #10   for mon
+        
+        vedicSignName = convert[vedicDegAndSign[1]] #cap
+        
+        #creat the moon chart from CAP
+        #to creat planet chart call for planet sign ie cap here
+        monAscChart = eval(vedicSignName)  #a dict of cap          [a_planet_pt] #60
+        
+        #to find the house of the planet in this chart
+        #get the sign num of planet and convert num to str
+        planetSign = self.nat[planet_name]['sign'] #8   for jup
+        
+        #planetZodiacDeg = zodiac[planetSign] +  self.nat[planet_name]['deg'] #210 + 10 = 220
+        
+        #what is sco in monAscChart or planet chart
+        housePositionOfPlanetDeg = monAscChart[convert[planetSign]] + self.nat[planet_name]['deg'] #300 + 10 = 310
+        
+        housePositionOfPlanetDegVedic = housePositionOfPlanetDeg - 23
+        
+        #return housePositionOfPlanetDegVedic #310 - 23
+    
+        #find it in house tuple
+        for h_tup, housee in house_tuple:
+            if housePositionOfPlanetDegVedic in h_tup:
+                houseOfPlanet = housee
+                break 
+        
+        return houseOfPlanet
     
         
     def constellationOf(self, _natPlanet, _name, asc='mon'):
@@ -131,55 +170,52 @@ class VediChart:
         #find it in house tuple
         for const, name in constellation:
             if vpt_deg_ in const:
-                result_ = name #jup
-                break 
+                constLord = name #jup
+                break
         
-        #which house ruled
-        houseRulers = {'sun':5, 'mon':4, 'merc':[3, 6], 'ven':[2, 7], 'mars':[1, 8], 'jup':[9, 12], 'sat':[10, 11]}
+        return constLord
+        """
+        #which house ruled by the name ie mon
+        houseRulership = {'sun':[5, 5], 'mon':[4, 4], 'merc':[3, 6], 'ven':[2, 7], 'mars':[1, 8], 'jup':[9, 12], 'sat':[10, 11]}
         
-        #if mon in 
-        if result_ in ['sun', 'mon']:
-            #convert num to sign name
-            houseR = convert[houseRulers[result_]] #can
-            
-            #create mon chart
-            inMonChart = convert[self._vedicpt(asc)[1]] #cap - so the chart begins from cap moon sign
-            
+        def ketuRahu():
+            '''RAHU AND KETU '''
+            if constLord == 'rahu':
+                planetConstLord = 'jup'
+            elif constLord == 'ketu':
+                planetConstLord = 'sun'
+            else:
+                planetConstLord = constLord
+        
+                #convert num to sign name
+        houseRuled = convert[houseRulership[constLord][0]],convert[houseRulership[constLord][1]] #(can, can)
+        
+        #create mon chart
+        inMonChart = convert[self._vedicpt(asc)[1]] #cap - so the moon begins from cap
+        
+        housesInChart = []
+        planetHouse = []
+        
+        
+        #degree in the moons chart
+        for house in houseRuled:
             #planet degree in the moons chart
             '''            cap[can]'''
-            planetH = eval(inMonChart)[houseR] #180
-            
-            #search in house tuple for name
-            for h_tup, name in house_tuple:
-                if planetH in h_tup:
-                    houseName = name
-                    break 
-            return result_, houseName #moon, rule house but in
+            housesInChart.append(eval(inMonChart)[house]) #180
         
-        elif result_ in ['merc', 'ven', 'mars', 'jup', 'sat']:
-            houseR = convert[houseRulers[result_][0]],convert[houseRulers[result_][1]]
-            
-            #create mon chart
-            inMonChart = convert[self._vedicpt(asc)[1]] #cap - so the moon begins from cap
-            
-            housesInChart = []
-            houseNames = []
-            
-            #degree in the moons chart
-            for hou in houseR:
-                housesInChart.append(eval(inMonChart)[hou])
-            
-            #search in house tuple for name
-            for h_tup, name in house_tuple:
-                for hous in housesInChart:
-                    if hous in h_tup:
-                        houseNames.append(name)
-                        break
-              
-            return result_, houseName #moon, rule house but in
-        else:
-            return ('jup', 'h9', range(281, 294))
-        
+        #search in house tuple for planetHousesname
+        for h_tup, namee in house_tuple:
+            for houses in housesInChart:
+                if houses in h_tup:
+                    planetHouse.append(namee)
+                    break
+                
+        #then in which house is the constLord
+        #planetDepositionHouse = self._depositionHouse(constLord, asc='asc')
+          
+        return constLord, planetHouse, planetDepositionHouse #moon, rule house but in
+        """
+    
     def subOf(self, _natPlanet, _name):
         
         def tI(hour=0, minute=0, second=0):
@@ -193,21 +229,22 @@ class VediChart:
         
         #what is the constellationOf planet
         planetConst = self.constellationOf(_natPlanet, _name, asc='asc') #returns ('mon', 'h9', range(281, 294))
-        print(f'planetConst = {planetConst}')
+        #print(f'planetConst = {planetConst}')
         
         
         for sub, range_ in capSub:
             #if tI(283, 11)
             if tI(vedicPlanetDeg, _natPlanet[_name]['min']) in range_:
-                resulttt = sub
+                planetSub = sub
                 break
         
-        
-        oracle_1 = f"{_name} is in {planetConst[0]} const, {planetConst[0]} rules {planetConst[1]},"
-        oracle_2 = f"so {_name} will give the result of {planetConst[1]}."
-        oracle_3 = f"But will the {planetConst[1]} be good or bad? My answer: the {planetConst[1]} will be challenging b/c {_name} sub {sub} is in 12H"
-                
-        return {'oracle_1':oracle_1, 'oracle_2':oracle_2, 'oracle_3':oracle_3}  
+        #rahuSub = self.constellationOf(_natPlanet, planetSub, asc='asc')
+        '''
+        oracle_1 = f"{_name} is in {planetConst[0]} const, {planetConst[0]} rules {planetConst[1]} and in {planetConst[2]},"
+        oracle_2 = f"so {_name} will give the result of {planetConst[1]} and {planetConst[2]}."
+        oracle_3 = f"But will the {planetConst[1]} be good or bad? My answer: the {planetConst[1]} will be challenging b/c {_name} SUB {sub} is in {planetConst[2]}"
+        '''        
+        return planetSub#{'oracle_1':oracle_1, 'oracle_2':oracle_2, 'oracle_3':oracle_3}  
     
     def __str__(self):
         return f'self.nat is {self.transit}'
@@ -215,5 +252,7 @@ class VediChart:
 inMoonChart = VediChart(nat, prog)
 #print(inMoonChart._vedicpt('mon'))
 #print(inMoonChart.houseOf(nat, 'jup'))
-#print(inMoonChart.constellationOf(nat, 'mars'))
-print(inMoonChart.subOf(nat, 'rahu'))
+
+print(f"asc const = {inMoonChart.constellationOf(nat, 'asc')}/{inMoonChart.subOf(nat, 'asc')}")
+
+
