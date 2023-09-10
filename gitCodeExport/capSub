@@ -45,7 +45,7 @@ capSub = (
             ('jup', range(timeToInt(308, 40, 0), timeToInt(310, 28, 40))),
             ('sat', range(timeToInt(310, 28, 40), timeToInt(312, 33, 20))),
             
-            #GEM
+            #GEM rahu
             ('jup', range(timeToInt(80,0,0), timeToInt(81,46,40))),
             ('sat', range(timeToInt(81,46,40), timeToInt(83,53,20))),
             ('merc', range(timeToInt(83,53,20), timeToInt(85,46,40))), 
@@ -53,19 +53,34 @@ capSub = (
             ('ven', range(timeToInt(86,33,20), timeToInt(86,46,40))),
             ('sun', range(timeToInt(88,46,40), timeToInt(89,26,40))),
             ('mon', range(timeToInt(89,26,40), timeToInt(90,0,0))),
+            #VIR mars sat pg 98
+            ('mars', range(timeToInt(173,20,0), timeToInt(174,6,40))),
+            ('rahu', range(timeToInt(174,6,40), timeToInt(176,6,40))),
+            ('jup', range(timeToInt(176,6,40), timeToInt(177,53,20))),
+            ('sat', range(timeToInt(177,53,20), timeToInt(180,0,0))),
+            #LIB RAHU GENERAL PG 90
+            ('rahu', range(timeToInt(186,40,0), timeToInt(188,40,0))),
+            ('jup', range(timeToInt(188,40,0), timeToInt(190,28,40))),
+            ('sat', range(timeToInt(190,26,40), timeToInt(192,33,20))),
+            ('merc', range(timeToInt(192,33,20), timeToInt(194,26,40))),
+            ('ketu', range(timeToInt(194,26,40), timeToInt(195,13,20))),
+            ('ven', range(timeToInt(195,13,20), timeToInt(197,26,40))),
+            ('sun', range(timeToInt(197,26,40), timeToInt(198,6,40))),
+            ('mon', range(timeToInt(198,6,40), timeToInt(199,13,20))),
+            ('mars', range(timeToInt(199,13,20), timeToInt(200, 0, 0))),
+            #SCO ASC PG 109
+            ('merc', range(timeToInt(226,40,00), timeToInt(228,33,20))),
+            ('ketu', range(timeToInt(228,33,20), timeToInt(229,20,0))),
+            ('ven', range(timeToInt(229,20,0), timeToInt(231,33,20))),
+            ('sun', range(timeToInt(231,33,20), timeToInt(232,13,20))),
+            ('mon', range(timeToInt(232,13,20), timeToInt(233,20,0))),
+            ('mars', range(timeToInt(233,20,0), timeToInt(234,6,40))),
+            ('rahu', range(timeToInt(234,6,40), timeToInt(236,6,40))),
+            ('jup', range(timeToInt(236,6,40), timeToInt(237,53,20))),
+            ('sat', range(timeToInt(237,53,20), timeToInt(240,0,0))),
             
           )
-aquaSub = (
-            #mars pg 119
-            ('merc', range(timeToInt(300, 0, 0), timeToInt(301, 53, 20))),
-            ('ketu', range(timeToInt(301, 53, 20), timeToInt(302, 40, 0))),
-            ('ven', range(timeToInt(302, 40, 0), timeToInt(304, 53, 20))),
-            ('sun', range(timeToInt(304, 53, 20), timeToInt(305, 33, 20))),
-            ('mon', range(timeToInt(305, 33, 20), timeToInt(306, 40, 0))),
-            ('rahu', range(timeToInt(306, 40, 0), timeToInt(308, 40, 0))),
-            ('jup', range(timeToInt(308, 40, 0), timeToInt(310, 28, 40))),
-            ('sat', range(timeToInt(310, 28, 40), timeToInt(312, 33, 20))),
-        )
+
 
 '''
 #Saturn, Sun, Jupiter: (1-13-20)-(3-00-00)
